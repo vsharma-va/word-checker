@@ -1,12 +1,12 @@
-def removePunctuation(data: str):                       #list of sentences taken from the text file and broken up into words will be referred as clean list
-    punc = '''!()-[]{};:'"\, <>./?@#$%^&amp;*_~'''      #takes in the clean list and removes punctuation marks and returns the list
-    for i in punc:
-        if i == data:
-            data = data.replace(i, '')
-        return data
+def removePunctuation(data: str):
+     punc = '''!()-[]{};:'"\, <>./?@#$%^&amp;*_~'''
+     for i in punc:
+         if i == data:
+             data = data.replace(i, '')
+         return data
 
 
-def additionalSpaces(data: str):                        #takes in the clean list and removes spaces
+def additionalSpaces(data: str):
     cleanBookList = []
     for i in data:
         x = i.strip()
@@ -14,7 +14,7 @@ def additionalSpaces(data: str):                        #takes in the clean list
     return cleanBookList
 
 
-def removeEmptyStrings(data: str):                     #takes in the clean list and removes empty strings ''
+def removeEmptyStrings(data: str):
     elementNumber = 0
     for i in data:
         if i == "":
@@ -25,59 +25,62 @@ def removeEmptyStrings(data: str):                     #takes in the clean list 
     return data
 
 
-def checkRepeatedWords(data, variable, textFileList):     #takes in a list which contains used words i.e words which have already been compared to every other word in the
-    for z in data:                                        #clean list
-        if z == variable:                                 #second parameter is the string, which you want to check wether or not it has been compared already
-            textFileList.remove(z)                        #if it has been compared already then it is removed from the clean list
-                                                          #third parameter is the clean list itself
-    return textFileList
+def checkRepeatedWords(data, variable):
+    for z in range(len(data)):
+        if variable == data[z]:
+            return False
+    return True
 
 
-
-def openFile():                                           #opens the file and stores the sentences in bookList and then it is broken up into words
-    with open("blank", 'r+') as file:
-        bookList = []                                     #after that all the punctuation, spaces and empty strings are removed and stored in cleanList
+def openFile():
+    with open("blank.txt", 'r+') as file:
+        bookList = []
         for lines in file:
             for words in lines.split():
                 bookList.append(words)
         cleanList = removeEmptyStrings(additionalSpaces(removePunctuation(bookList)))
-    return cleanList
-
-
-def main():
-        cleanList = (openFile())
         lenCleanList = len(cleanList)
-        listIndexNumber: int = 0                    #index number of the string which will be compared with every other string in the cleanList
-        wordRepeatedTimes: int = 0                  #number of times the string is repeated
+        listIndexNumber: int = 0
+        wordRepeatedTimes: int = 0
         countIndexNumber: int = 0
-        frequencyDict = {}                          #stores the string and number of times which it has been repeated
-        usedWords = []                              #stores the strings which have already been compared
+        deleteThis = 0
+        deleteThis2 = 0
+        usedWords = ["THIS"]
+        frequencyDict = {}
 
         done: bool = False
         while not done:
-             for word in cleanList:
-                if cleanList[listIndexNumber] == word:
+            for word in cleanList:
+                if cleanList[listIndexNumber] == word and checkRepeatedWords(usedWords, cleanList[listIndexNumber]):
                     wordRepeatedTimes += 1
-
+                    deleteThis2 += 1
+                elif not checkRepeatedWords(usedWords, cleanList[listIndexNumber]):
+                    listIndexNumber += 1
+                    deleteThis += 1
+                    break
                 elif countIndexNumber == lenCleanList - 1:
                     frequencyDict[cleanList[listIndexNumber]] = wordRepeatedTimes
                     usedWords.append(cleanList[listIndexNumber])
-
                     listIndexNumber += 1
-                    cleanList = checkRepeatedWords(usedWords, cleanList[listIndexNumber], cleanList)
-                    lenCleanList = len(cleanList)
-                    break
+                    print("3")
+                elif cleanList[listIndexNumber] != word:
+                    deleteThis2 += 1
                 elif listIndexNumber == lenCleanList - 1:
                     done = True
                     break
 
-
-                countIndexNumber += 1
-             wordRepeatedTimes = 0
-
-#it is still very slow 
-
+            countIndexNumber += 1
         print(frequencyDict)
+        print(deleteThis2)
+        print(deleteThis)
 
-main()
+
+
+
+
+
+#wordsUsed = ['what', '']
+#cleanList = ['', 'what']
+#print(checkRepeatedWords(wordsUsed, cleanList[0]))
+openFile()
 
