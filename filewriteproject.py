@@ -84,5 +84,5 @@ def openFile():
 
 #wordsUsed = ['what', '']
 #cleanList = ['', 'what']
-#print(checkRepeatedWords(wordsUsed, cleanList[0]))
+
 openFile()
